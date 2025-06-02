@@ -36,7 +36,7 @@ const state = reactive({
       </div>
     </div>
     <div>
-      <h6 class="text-xl font-medium my-2">Biểu đồ giá điện thay đổi theo số kWh</h6>
+      <h6 class="text-xl font-medium my-2">Biểu đồ tiền điện thay đổi theo số kWh</h6>
       <Chart class="w-full" />
     </div>
   </div>
