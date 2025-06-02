@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {formatNumber, PriceLevel, roundNumber} from "./model.ts";
+import {formatNumber, PriceLevel} from "./model.ts";
 import {GetOutputOfLevel, GetPrice, GetPriceOfLevel} from "./price.ts";
 import {computed} from "vue";
 import CompareLabel from "./CompareLabel.vue";
@@ -38,56 +38,58 @@ const totalPriceCompare = computed(() => {
 <template>
   <table class="text-left w-full">
     <thead>
-      <tr>
-        <th class="border p-2">Bậc</th>
-        <th class="border p-2 text-center">Đơn giá<br>(đồng/kWh)</th>
-        <th v-if="totalKWh" class="border p-2 text-center">Sản lượng<br>(kWh)</th>
-        <th v-if="totalKWh" class="border p-2 text-center">Thành tiền<br>(đồng)</th>
-      </tr>
+    <tr>
+      <th class="border p-2">Bậc</th>
+      <th class="border p-2 text-center">Đơn giá<br>(đồng/kWh)</th>
+      <th v-if="totalKWh" class="border p-2 text-center">Sản lượng<br>(kWh)</th>
+      <th v-if="totalKWh" class="border p-2 text-center">Thành tiền<br>(đồng)</th>
+    </tr>
     </thead>
     <tbody>
-      <tr v-for="(priceLevel, index) in priceLevels" :key="index" class="hover:bg-gray-200"
-        :class="{ 'bg-gray-100': index % 2 == 0 }">
-        <td class="border p-2">
-          Bậc {{ index + 1 }}: Từ <span class="font-bold">{{ priceLevel.min }}</span> <span v-if="priceLevel.max">đến <span class="font-bold">{{ priceLevel.max }}</span></span> KWh
-        </td>
-        <td class="text-center border p-2">{{ formatNumber(priceLevel.price) }}</td>
-        <td v-if="totalKWh" class="text-center border p-2">{{ formatNumberDefaultEmpty(GetOutputOfLevel(priceLevel, totalKWh || 0)) }}</td>
-        <td v-if="totalKWh" class="border p-2 text-right">{{ formatNumberDefaultEmpty(GetPriceOfLevel(priceLevel, totalKWh || 0)) }}</td>
-      </tr>
+    <tr v-for="(priceLevel, index) in priceLevels" :key="index" :class="{ 'bg-gray-100': index % 2 == 0 }"
+        class="hover:bg-gray-200">
+      <td class="border p-2">
+        Bậc {{ index + 1 }}: Từ <span class="font-bold">{{ priceLevel.min }}</span> <span v-if="priceLevel.max">đến <span
+        class="font-bold">{{ priceLevel.max }}</span></span> KWh
+      </td>
+      <td class="text-center border p-2">{{ formatNumber(priceLevel.price) }}</td>
+      <td v-if="totalKWh" class="text-center border p-2">{{ formatNumberDefaultEmpty(GetOutputOfLevel(priceLevel, totalKWh || 0)) }}</td>
+      <td v-if="totalKWh" class="border p-2 text-right">{{ formatNumberDefaultEmpty(GetPriceOfLevel(priceLevel, totalKWh || 0)) }}</td>
+    </tr>
     <tr v-if="priceLevels.length < 6">
-      <td colspan="4" class="border p-2">&nbsp;</td>
+      <td class="border p-2" colspan="4">&nbsp;</td>
     </tr>
     </tbody>
     <tfoot v-if="totalKWh">
-      <tr>
-        <th colspan="2" class="border p-2">Tổng điện năng tiêu thụ (kWh)</th>
-        <th class="border p-2 text-center">{{ formatNumberDefaultEmpty(totalKWh) }}</th>
-        <th class="border p-2 text-right"></th>
-      </tr>
-      <tr>
-        <th colspan="3" class="border p-2">
-          Tổng tiền chưa thuế (đồng) <span class="font-normal">(1)</span>
-        </th>
-        <th class="border p-2 text-right">{{ formatNumberDefaultEmpty(rawPrice) }}</th>
-      </tr>
-      <tr>
-        <th colspan="3" class="border p-2">
-          Thuế VAT {{ vatPercent }}% (đồng) <span class="font-normal">(2) = (1) * {{ vatPercent }}%</span>
-        </th>
-        <th class="border p-2 text-right">{{ formatNumberDefaultEmpty(vatPrice) }}</th>
-      </tr>
-      <tr>
-        <th colspan="3" class="border p-2">
-          Tổng tiền (đồng) <span class="font-normal">(3) = (1) + (2)</span>
-          <CompareLabel class="ml-2" v-if="totalPriceCompare" :value="totalPrice" :base="totalPriceCompare" increase-class="text-red-500" decrease-class="text-green-500" />
-        </th>
-        <th class="border p-2 text-right">{{ formatNumberDefaultEmpty(totalPrice) }}</th>
-      </tr>
-      <tr>
-        <th colspan="3" class="border p-2">Giá trung bình mỗi kWh (đồng) <span class="font-normal">(4) = (3) / {{ totalKWh }}</span></th>
-        <th class="border p-2 text-right">{{ formatNumberDefaultEmpty(Math.ceil((rawPrice + vatPrice) / totalKWh)) }}</th>
-      </tr>
+    <tr>
+      <th class="border p-2" colspan="2">Tổng điện năng tiêu thụ (kWh)</th>
+      <th class="border p-2 text-center">{{ formatNumberDefaultEmpty(totalKWh) }}</th>
+      <th class="border p-2 text-right"></th>
+    </tr>
+    <tr>
+      <th class="border p-2" colspan="3">
+        Tổng tiền chưa thuế (đồng) <span class="font-normal">(1)</span>
+      </th>
+      <th class="border p-2 text-right">{{ formatNumberDefaultEmpty(rawPrice) }}</th>
+    </tr>
+    <tr>
+      <th class="border p-2" colspan="3">
+        Thuế VAT {{ vatPercent }}% (đồng) <span class="font-normal">(2) = (1) * {{ vatPercent }}%</span>
+      </th>
+      <th class="border p-2 text-right">{{ formatNumberDefaultEmpty(vatPrice) }}</th>
+    </tr>
+    <tr>
+      <th class="border p-2" colspan="3">
+        Tổng tiền (đồng) <span class="font-normal">(3) = (1) + (2)</span>
+        <CompareLabel v-if="totalPriceCompare" :base="totalPriceCompare" :value="totalPrice" class="ml-2" decrease-class="text-green-500"
+                      increase-class="text-red-500"/>
+      </th>
+      <th class="border p-2 text-right">{{ formatNumberDefaultEmpty(totalPrice) }}</th>
+    </tr>
+    <tr>
+      <th class="border p-2" colspan="3">Giá trung bình mỗi kWh (đồng) <span class="font-normal">(4) = (3) / {{ totalKWh }}</span></th>
+      <th class="border p-2 text-right">{{ formatNumberDefaultEmpty(Math.ceil((rawPrice + vatPrice) / totalKWh)) }}</th>
+    </tr>
     </tfoot>
   </table>
 </template>
