@@ -2,6 +2,7 @@
 import {reactive} from "vue";
 import { Price6Levels, Price5Levels } from "./price";
 import TablePrices from "./TablePrices.vue";
+//@ts-ignore
 import Chart from "./Chart.vue";
 
 const state = reactive({
