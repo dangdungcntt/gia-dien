@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {reactive} from "vue";
+import {computed, reactive} from "vue";
 import { Price6Levels, Price5Levels } from "./price";
 import TablePrices from "./TablePrices.vue";
 //@ts-ignore
@@ -9,6 +9,14 @@ const state = reactive({
   totalKwh: undefined,
   vatPercent: 8
 });
+
+const inputKwh = computed(() => {
+  if (!state.totalKwh) {
+    return 0;
+  }
+
+  return Math.floor(state.totalKwh);
+})
 
 </script>
 
@@ -28,11 +36,11 @@ const state = reactive({
     <div class="grid md:grid-cols-2 gap-4 md:gap-8">
       <div>
         <h6 class="text-xl font-medium my-2">Bảng giá điện 6 bậc (áp dụng trước 29/05/2025):</h6>
-        <TablePrices :price-levels="Price6Levels" :vat-percent="state.vatPercent" :total-k-wh="state.totalKwh"/>
+        <TablePrices :price-levels="Price6Levels" :vat-percent="state.vatPercent" :total-k-wh="inputKwh"/>
       </div>
       <div>
         <h6 class="text-xl font-medium my-2">Bảng giá điện 5 bậc (áp dụng từ 29/05/2025):</h6>
-        <TablePrices :price-levels="Price5Levels" :compare-price-levels="Price6Levels" :vat-percent="state.vatPercent" :total-k-wh="state.totalKwh"/>
+        <TablePrices :price-levels="Price5Levels" :compare-price-levels="Price6Levels" :vat-percent="state.vatPercent" :total-k-wh="inputKwh"/>
       </div>
     </div>
     <div>

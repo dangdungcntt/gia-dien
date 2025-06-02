@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {roundNumber} from "./model.ts";
+import {roundNumber} from "./utils";
 import {computed} from "vue";
 
 const props = defineProps<{

@@ -1,8 +1,14 @@
 <script lang="ts" setup>
-import {formatNumber, PriceLevel} from "./model.ts";
-import {GetOutputOfLevel, GetPrice, GetPriceOfLevel} from "./price.ts";
+import {GetOutputOfLevel, GetPrice, GetPriceOfLevel, type PriceLevel} from "./price";
 import {computed} from "vue";
 import CompareLabel from "./CompareLabel.vue";
+
+const formatNumber = (number: number) => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+const formatNumberDefaultEmpty = (num: number) => {
+  if (!num) return "";
+  return formatNumber(num);
+}
 
 const props = defineProps<{
   priceLevels: PriceLevel[],
@@ -10,11 +16,6 @@ const props = defineProps<{
   totalKWh?: number,
   vatPercent: number,
 }>()
-
-const formatNumberDefaultEmpty = (num: number) => {
-  if (num === 0) return "";
-  return formatNumber(num);
-}
 
 const rawPrice = computed(() => {
   return GetPrice(props.priceLevels, props.totalKWh || 0)
@@ -49,8 +50,8 @@ const totalPriceCompare = computed(() => {
     <tr v-for="(priceLevel, index) in priceLevels" :key="index" :class="{ 'bg-gray-100': index % 2 == 0 }"
         class="hover:bg-gray-200">
       <td class="border p-2">
-        Bậc {{ index + 1 }}: Từ <span class="font-bold">{{ priceLevel.min }}</span> <span v-if="priceLevel.max">đến <span
-        class="font-bold">{{ priceLevel.max }}</span></span> KWh
+        Bậc {{ index + 1 }}: Từ <span class="font-bold">{{ priceLevel.min == 0 ? priceLevel.min : priceLevel.min + 1 }}</span> <span v-if="priceLevel.max">đến <span
+        class="font-bold">{{ priceLevel.max }}</span></span> kWh
       </td>
       <td class="text-center border p-2">{{ formatNumber(priceLevel.price) }}</td>
       <td v-if="totalKWh" class="text-center border p-2">{{ formatNumberDefaultEmpty(GetOutputOfLevel(priceLevel, totalKWh || 0)) }}</td>
