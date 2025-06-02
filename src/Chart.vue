@@ -1,8 +1,4 @@
-<template>
-  <Line :data="chartData" :options="chartOptions"/>
-</template>
-
-<script setup>
+<script setup lang="ts">
 import {CategoryScale, Chart as ChartJS, Filler, LinearScale, LineElement, PointElement, Tooltip,} from 'chart.js';
 import {Line} from 'vue-chartjs';
 import {roundNumber} from "./model";
@@ -99,3 +95,7 @@ const chartOptions = {
   }
 };
 </script>
+
+<template>
+  <Line :data="chartData" :options="chartOptions"/>
+</template>
